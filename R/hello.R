@@ -15,4 +15,5 @@
 
 hello <- function() {
   print("Hello, worlddsf!")
+  print("Hello, world34!")
 }
