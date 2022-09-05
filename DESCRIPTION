@@ -1,11 +1,18 @@
 Package: libraryR
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Title: Esta es una libreria de prueba
+Version: 0.2.1
+Author: DaniSFprog
+Maintainer: falextp15, DaniSFprog emily-moreno LuisfSAnchez550
+Description: This is a package of exercises containing an introduction to R making basic
+    use of data-sets, such as nycflights13 that will help you perform statistical
+    and mathematical analysis.
+License: MIT
 Encoding: UTF-8
 LazyData: true
+Imports: 
+    dplyr
+    ggplot2
+    nycflights13
+    tidyverse
+RoxygenNote:  7.2.1
