@@ -9,6 +9,7 @@ library(tidyverse)
 flights<- flights
 vuelos_retraso<- filter(flights,arr_delay >= 120)
 
+
 ##2. volo a houston
 
 houston <- filter(flights,dest == 'HOU')
@@ -190,7 +191,8 @@ not_cancelled %>%
 
 ##5.7.1
 
-##item 1.2
+##item 1.3
+
 
 ##Vuelva a consultar las listas de funciones útiles de mutación y filtrado. Describe cómo cambia cada operación cuando la combinas con la agrupación.
 
