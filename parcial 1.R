@@ -1,6 +1,7 @@
 library(nycflights13)
 library(tidyverse)
 
+
 ## ejercicio 5.2.4 item 1
 
 ## 1. tubo un retraso de llegada de dos o mas horas
@@ -189,7 +190,7 @@ not_cancelled %>%
 
 ##5.7.1
 
-##item 1
+##item 1.2
 
 ##Vuelva a consultar las listas de funciones útiles de mutación y filtrado. Describe cómo cambia cada operación cuando la combinas con la agrupación.
 
