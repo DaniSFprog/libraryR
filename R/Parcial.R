@@ -8,6 +8,7 @@ library(tidyverse)
 flights<- flights
 vuelos_retraso<- filter(flights,arr_delay >= 120)
 
+
 ##2. volo a houston
 
 houston <- filter(flights,dest == 'HOU')
@@ -99,10 +100,98 @@ cincodf1 <- mutate(flights, sched_dep_time_min
 ##item 2 Comparar air_time con arr_time - dep_time. Que esperas ver? ¿Que ves? ¿Qué necesitas hacer para arreglarlo?
 
 cincodf2 <-flights%>%
-  mutate(air_time_comp= arr_time-dep_time)%>%
+  mutate(air_time_comp= arr_time-dep_time)
 
-  ## en la tabla se muestra que hay un desfase de tiempo ya que hay que tomar en cuenta otros datos
+## en la tabla se muestra que hay un desfase de tiempo ya que hay que tomar en cuenta otros datos
 
-  ##5.6.7
+##5.6.7
 
-  ##item 1
+##item 1
+##Un vuelo llega 15 minutos antes el 50% del tiempo y 15 minutos tarde el 50% del tiempo.
+##- Un vuelo siempre llega 10 minutos tarde.
+##- Un vuelo llega 30 minutos antes el 50% del tiempo y 30 minutos tarde el 50% del tiempo.
+##- 99% del tiempo un vuelo es puntual. El 1% de las veces llega 2 horas tarde.
+##¿Qué es más importante: el retraso en la llegada o el retraso en la salida?
+
+
+## primero debemos filtrar los datos de vuelo no existentes es decir que aparescan na
+not_cancelled <- flights %>%
+  filter(!is.na(air_time))
+##la llegada es mas importante asi que es lo que toca ordenar primero
+not_cancelled %>%
+  group_by(tailnum) %>%
+  summarise(
+    count = n(),
+    p_15_early_arr = mean(arr_delay < -15),
+    p_15_dep_arr = mean(dep_delay < -15)
+  ) %>%
+  filter(p_15_early_arr > 0.5 | p_15_dep_arr > 0.5) %>%
+  filter(count > 30) %>%
+  arrange(desc(p_15_early_arr), desc(p_15_dep_arr))
+##auí se muestra  los aviones  que realizaron al menos 30 vuelos en un año y llegaron o salieron antes de los 15 minutos durante más del 50% del tiempo.
+
+
+#La llegada es más importante
+not_cancelled %>%
+  group_by(tailnum, origin, dest) %>%
+  summarise(
+    count = n(),
+    arr_delay_10_c = sum(arr_delay > 10),
+    arr_delay_10_p = mean(arr_delay > 10),
+    dep_delay_10_c = sum(dep_delay > 10),
+    dep_delay_10_p = mean(dep_delay > 10)
+  ) %>%
+  filter(count > 20) %>%
+  arrange(desc(arr_delay_10_p))
+## Los vuelos de  Atlanta llegan con un retraso de más de 10 minutos la mayoría de las veces.
+
+
+### ##PROBABILIDAD EXACTA DE 10 MINUTOS DE TARDÍA
+not_cancelled %>%
+  group_by(tailnum) %>%
+  summarise(
+    count = n(),
+    exact_10 = mean(arr_delay == 10)
+  ) %>%
+  filter(count > 10) %>%
+  arrange(desc(exact_10))
+
+##SELECCIONE PARA UN ENFOQUE DE 30 MINUTOS
+# ## MEJORES VUELOS MENOS DE 30 MINUTOS CRITERIOS TEMPRANO O TARDÍO ORDENADOS
+# ## LA LLEGADA ES MÁS IMPORTANTE DURANTE LA CLASIFICACIÓN
+
+not_cancelled %>%
+  group_by(tailnum) %>%
+  mutate(
+    count = n(),
+    arr_30_early = mean(arr_delay < -30),
+    dep_30_early = mean(dep_delay < -30),
+    arr_30_late  = mean(arr_delay > 30),
+    dep_30_late = mean(dep_delay > 30)
+  ) %>%
+  filter(count > 20) %>%
+  arrange(desc(arr_30_early), desc(dep_30_early), arr_30_late, dep_30_late) %>%
+  select(dest)
+
+
+
+##la llegada es mas importante asi que  se ordena primero la llegada
+not_cancelled %>%
+  group_by(tailnum) %>%
+  mutate(
+    count = n(),
+    median_arr_delay = median(arr_delay),
+    median_dep_delay = median(dep_delay)
+  ) %>%
+  filter(count > 30) %>%
+  arrange(median_arr_delay, median_dep_delay)
+## De la tabla vemos que el vuelo N479AA# el vuelo  llega antes de los 20 minutos el 50% del tiempo, sale antes de los 3 minutos el 50% del tiempo.
+
+
+##5.7.1
+
+##item 1.3
+
+
+##Vuelva a consultar las listas de funciones útiles de mutación y filtrado. Describe cómo cambia cada operación cuando la combinas con la agrupación.
+
